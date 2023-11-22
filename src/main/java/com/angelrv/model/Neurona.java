@@ -12,10 +12,10 @@ public class Neurona {
     private double suma;
     private double output;
 
-    private Neurona(double B1, double W1, double W2) {
-        this.B1 = B1;
-        this.W1 = W1;
-        this.W2 = W2;
+    private Neurona() {
+        this.B1 = Math.random();
+        this.W1 = Math.random();
+        this.W2 = Math.random();
     }
 
     /**
