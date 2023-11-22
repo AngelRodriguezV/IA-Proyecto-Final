@@ -12,10 +12,16 @@ public class Neurona {
     private double suma;
     private double output;
 
-    private Neurona() {
+    public Neurona() {
         this.B1 = Math.random();
         this.W1 = Math.random();
         this.W2 = Math.random();
+    }
+
+    public Neurona(double B1, double W1, double W2) {
+        this.B1 = B1;
+        this.W1 = W1;
+        this.W2 = W2;
     }
 
     /**
@@ -45,8 +51,8 @@ public class Neurona {
     }
 
     public void errorTotal(double target) {
-        this.W1 = this.W1 - 0.6 - this.error(this.X1, target);
-        this.W2 = this.W2 - 0.6 - this.error(this.X2, target);
+        this.W1 = this.W1 - 0.6 * this.error(this.X1, target);
+        this.W2 = this.W2 - 0.6 * this.error(this.X2, target);
     }
     
     public void setX1(double x1) {
@@ -55,5 +61,24 @@ public class Neurona {
     
     public void setX2(double x2) {
         X2 = x2;
+    }
+
+    public double getOutput() {
+        return output;
+    }
+
+    public double getSuma() {
+        return suma;
+    }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return " Valores\nX1 = " + this.X1 + 
+            "\nX2 = " + this.X2 + 
+            "\nB = " + this.B1 + 
+            "\nW1 = " + this.W1 + 
+            "\nW2 = " + this.W2 +
+            "\nOutput = " + this.output;
     }
 }
