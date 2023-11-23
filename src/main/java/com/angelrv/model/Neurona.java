@@ -9,14 +9,12 @@ public class Neurona {
     private double B;
     private ArrayList<Double> pesos;
     private ArrayList<Double> inputs;
-    private double W1;
-    private double W2;
-    private double X1;
-    private double X2;
+    private int numEntradas;
     private double suma;
     private double output;
 
     public Neurona(int numEntradas) {
+        this.numEntradas = numEntradas;
         this.B = new Random().nextDouble();
         this.pesos = new ArrayList<Double>();
         this.inputs = new ArrayList<Double>();
@@ -25,18 +23,28 @@ public class Neurona {
         }
     }
 
-    public Neurona(double B, double W1, double W2) {
+    public Neurona(int numEntradas, double B, double ... pesos) {
+        if (numEntradas != pesos.length) {
+            throw new IllegalArgumentException("La cantidad de pesos no coinciden con el numero de entradas.");
+        }
+        this.numEntradas = numEntradas;
         this.B = B;
-        this.W1 = W1;
-        this.W2 = W2;
+        this.pesos = new ArrayList<Double>();
+        this.inputs = new ArrayList<Double>();
+        for (double d : pesos) {
+            this.pesos.add(d);
+        }
     }
 
     /**
-     * suma Ponderada "b + x1w1 + x2w2"
+     * suma Ponderada "b + x1w1 + .. + xnwn"
      * @return
      */
     private void sumaPondera() {
-        this.suma = this.B + (this.X1 * this.W1) + (this.X2 * this.W2);
+        this.suma = this.B;
+        for (int i = 0; i < numEntradas; i++) {
+            this.suma += (this.inputs.get(i) * this.pesos.get(i));
+        }
     }
 
     /**
@@ -62,8 +70,9 @@ public class Neurona {
      * @param target
      */
     public void errorTotal(double target) {
-        this.W1 = this.W1 - 0.6 * this.error(this.X1, target);
-        this.W2 = this.W2 - 0.6 * this.error(this.X2, target);
+        for (int i = 0; i < this.numEntradas; i++) {
+            this.pesos.set(i, this.pesos.get(i) - 0.6 * this.error(this.pesos.get(i), target));
+        }
     }
 
     /**
@@ -71,9 +80,13 @@ public class Neurona {
      * @param X1
      * @param X2
      */
-    public void evaluar(double X1, double X2) {
-        this.X1 = X1;
-        this.X2 = X2;
+    public void evaluar(double... input) {
+        if (this.numEntradas != input.length) {
+            throw new IllegalArgumentException("La cantidad de valores no coinciden con el tamaño establecido.");
+        }
+        for (double d : input) {
+            this.inputs.add(d);
+        }
         this.sumaPondera();
         this.funcionActivacion();
     }
@@ -84,11 +97,6 @@ public class Neurona {
 
     @Override
     public String toString() {
-        return  "\nX1 = " + this.X1 + 
-                "\nX2 = " + this.X2 + 
-                "\nB = " + this.B +
-                "\nW1 = " + this.W1 + 
-                "\nW2 = " + this.W2 +
-                "\nOutput = " + this.output;
+        return  "\nOutput = " + this.output;
     }
 }

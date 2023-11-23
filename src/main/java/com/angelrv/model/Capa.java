@@ -13,7 +13,7 @@ public class Capa {
         this.numEntradas = numEntradas;
         this.neuronas = new ArrayList<Neurona>();
         for (int i = 0; i < this.numNeuronas; i++) {
-            this.neuronas.add(new Neurona());
+            this.neuronas.add(new Neurona(1));
         }
     }
 
