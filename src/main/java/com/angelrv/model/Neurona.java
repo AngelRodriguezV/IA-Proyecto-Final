@@ -7,9 +7,9 @@ import java.util.Random;
 public class Neurona {
     
     private double B;
+    private int numEntradas;
     private ArrayList<Double> pesos;
     private ArrayList<Double> inputs;
-    private int numEntradas;
     private double suma;
     private double output;
 
@@ -82,7 +82,7 @@ public class Neurona {
      */
     public void evaluar(double... input) {
         if (this.numEntradas != input.length) {
-            throw new IllegalArgumentException("La cantidad de valores no coinciden con el tamaño establecido.");
+            throw new IllegalArgumentException("La cantidad de inputs no coinciden con el tamaño establecido.");
         }
         for (double d : input) {
             this.inputs.add(d);
@@ -97,6 +97,11 @@ public class Neurona {
 
     @Override
     public String toString() {
-        return  "\nOutput = " + this.output;
+        String cad = "";
+        for (int i = 0; i < this.numEntradas; i++) {
+            cad += "\n  w"+i+": "+this.pesos.get(i)+",  x"+i+": "+this.inputs.get(i);
+        }
+        cad += "\n  b: "+this.B+"\n  Output = " + this.output;
+        return cad;
     }
 }
