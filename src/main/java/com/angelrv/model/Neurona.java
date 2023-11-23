@@ -1,10 +1,14 @@
 package com.angelrv.model;
 
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class Neurona {
     
-    private double B1;
+    private double B;
+    private ArrayList<Double> pesos;
+    private ArrayList<Double> inputs;
     private double W1;
     private double W2;
     private double X1;
@@ -12,32 +16,35 @@ public class Neurona {
     private double suma;
     private double output;
 
-    public Neurona() {
-        this.B1 = Math.random();
-        this.W1 = Math.random();
-        this.W2 = Math.random();
+    public Neurona(int numEntradas) {
+        this.B = new Random().nextDouble();
+        this.pesos = new ArrayList<Double>();
+        this.inputs = new ArrayList<Double>();
+        for (int i = 0; i < numEntradas; i++) {
+            this.pesos.add(new Random().nextDouble());
+        }
     }
 
-    public Neurona(double B1, double W1, double W2) {
-        this.B1 = B1;
+    public Neurona(double B, double W1, double W2) {
+        this.B = B;
         this.W1 = W1;
         this.W2 = W2;
-    }
-
-    /**
-     * Funcion de Activación 1 / (1 + e ^ sum)
-     * @return
-     */
-    public void funcionActivacion() {
-        this.output = 1 / (1 + Math.pow(Math.E, -this.suma));
     }
 
     /**
      * suma Ponderada "b + x1w1 + x2w2"
      * @return
      */
-    public void sumaPondera() {
-        this.suma = this.B1 + (this.X1 * this.W1) + (this.X2 * this.W2);
+    private void sumaPondera() {
+        this.suma = this.B + (this.X1 * this.W1) + (this.X2 * this.W2);
+    }
+
+    /**
+     * Funcion de Activación 1 / (1 + e ^ sum)
+     * @return
+     */
+    private void funcionActivacion() {
+        this.output = 1 / (1 + Math.pow(Math.E, -this.suma));
     }
 
     /**
@@ -46,39 +53,42 @@ public class Neurona {
      * @param target
      * @return
      */
-    public double error(double input, double target) {
+    private double error(double input, double target) {
         return (this.output - target) * (this.output * (1 - this.output)) * input;
     }
 
+    /**
+     * Función para reducir el error
+     * @param target
+     */
     public void errorTotal(double target) {
         this.W1 = this.W1 - 0.6 * this.error(this.X1, target);
         this.W2 = this.W2 - 0.6 * this.error(this.X2, target);
     }
-    
-    public void setX1(double x1) {
-        X1 = x1;
-    }
-    
-    public void setX2(double x2) {
-        X2 = x2;
+
+    /**
+     * Evalua los datos de entrada
+     * @param X1
+     * @param X2
+     */
+    public void evaluar(double X1, double X2) {
+        this.X1 = X1;
+        this.X2 = X2;
+        this.sumaPondera();
+        this.funcionActivacion();
     }
 
     public double getOutput() {
         return output;
     }
 
-    public double getSuma() {
-        return suma;
-    }
-
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return " Valores\nX1 = " + this.X1 + 
-            "\nX2 = " + this.X2 + 
-            "\nB = " + this.B1 + 
-            "\nW1 = " + this.W1 + 
-            "\nW2 = " + this.W2 +
-            "\nOutput = " + this.output;
+        return  "\nX1 = " + this.X1 + 
+                "\nX2 = " + this.X2 + 
+                "\nB = " + this.B +
+                "\nW1 = " + this.W1 + 
+                "\nW2 = " + this.W2 +
+                "\nOutput = " + this.output;
     }
 }
