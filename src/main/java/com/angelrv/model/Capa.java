@@ -18,6 +18,12 @@ public class Capa {
         }
     }
 
+    /**
+     * 
+     * @param numNeuronas
+     * @param numEntradas
+     * @param pesos los pesos se agregan de la siguiente manera b1, w1, w2, b2, w3, w4, ..., bn, wn-1, wn
+     */
     public Capa(int numNeuronas, int numEntradas, double... pesos) {
         if ((numNeuronas*(numEntradas+1)) != pesos.length) {
             throw new IllegalArgumentException("La cantidad de Pesos no coinciden con el numero de pesos + 1 para cada neurona");
