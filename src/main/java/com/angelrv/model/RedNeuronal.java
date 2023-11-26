@@ -1,16 +1,35 @@
 package com.angelrv.model;
 
+import java.util.ArrayList;
+
 public class RedNeuronal {
 
     private Capa capaEntrada;
-    private Capa capaOculta;
+    private ArrayList<Capa> capasOcultas;
     private Capa capaSalida;
+
+    private int numEntradas;
+    private int numSalidas;
+    private int numCapasOcultas;
+    private int numEntradasCapasOcultas;
     
-    public RedNeuronal() {
-        this.capaEntrada = new Capa(2, 1);
-        this.capaOculta = new Capa(2, 2);
-        this.capaSalida = new Capa(2, 2);
+    public RedNeuronal(int numEntradas, int numSalidas, int numCapasOcultas, int numEntradasCapasOcultas) {
+        this.numEntradas = numEntradas;
+        this.numSalidas = numSalidas;
+        this.numCapasOcultas = numCapasOcultas;
+        this.numEntradasCapasOcultas = numEntradasCapasOcultas;
+        this.capasOcultas = new ArrayList<Capa>();
     }
 
-    
+    public void addInputs(double... inputs) {
+        if (this.numEntradas != inputs.length) {
+            
+        }
+    }
+
+    public void addOutputs(double... outputs) {
+        if (this.numSalidas != outputs.length) {
+            
+        }
+    }
 }
