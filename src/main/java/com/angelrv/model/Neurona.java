@@ -6,10 +6,10 @@ import java.util.Random;
 
 public class Neurona {
     
-    private double B;
-    private int numEntradas;
-    private ArrayList<Double> pesos;
-    private ArrayList<Double> inputs;
+    private double b; // sesgo
+    private int numEntradas; // numero de entradas
+    private ArrayList<Double> pesos; //pesos
+    private ArrayList<Double> inputs; // inputs
     private double suma;
     private double output;
 
@@ -56,23 +56,39 @@ public class Neurona {
     }
 
     /**
-     * Derivada del error total dx(ErrorTotal)/dx(w)
-     * @param input w
-     * @param target
-     * @return
+     * Derivada de la Funcion de Coste
      */
-    private double error(double input, double target) {
-        return (this.output - target) * (this.output * (1 - this.output)) * input;
+    public double dxFCoste(double target) {
+        return this.output - target;
     }
 
     /**
-     * Función para reducir el error
-     * @param target
+     * Derivada de la Funcion de Activación
      */
-    public void errorTotal(double target) {
+    public double dxFActivacion() {
+        return this.output * (1 - this.output);
+    }
+
+    public double errorImputado(double target) {
+        return this.dxFCoste(target) * this.derivadaFuncionActivacion();
+    }
+
+    public double errorBayas(double target) {
+        return this.errorImputado(target);
+    }
+
+    public double errorCosteW(int i, double target) {
+        return this.errorImputado(target) * this.inputs.get(i);
+    }
+
+    public void actualizaciónPesos() {
         for (int i = 0; i < this.numEntradas; i++) {
             this.pesos.set(i, this.pesos.get(i) - 0.6 * this.error(this.pesos.get(i), target));
         }
+    }
+
+    public double calcularDerivadas() {
+        return this.errorImputado() * 
     }
 
     /**
