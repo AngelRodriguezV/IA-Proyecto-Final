@@ -1,123 +1,74 @@
 package com.angelrv.model;
 
-import java.lang.Math;
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
 
-public class Neurona {
+public abstract class Neurona implements NeuronaFunciones {
     
-    private double b; // sesgo
-    private int numEntradas; // numero de entradas
-    private ArrayList<Double> pesos; //pesos
-    private ArrayList<Double> inputs; // inputs
-    private double suma;
-    private double output;
+    protected int numEntradas;
+    protected double b;
+    protected HashMap<Integer, Integer> relacion;
+    protected ArrayList<Double> pesos;
+    protected ArrayList<Double> inputs;
 
     public Neurona(int numEntradas) {
         this.numEntradas = numEntradas;
-        this.B = new Random().nextDouble();
+        this.relacion = new HashMap<Integer, Integer>();
         this.pesos = new ArrayList<Double>();
         this.inputs = new ArrayList<Double>();
-        for (int i = 0; i < numEntradas; i++) {
-            this.pesos.add(new Random().nextDouble());
-        }
     }
 
-    public Neurona(int numEntradas, double B, double ... pesos) {
-        if (numEntradas != pesos.length) {
-            throw new IllegalArgumentException("La cantidad de pesos no coinciden con el numero de entradas.");
-        }
-        this.numEntradas = numEntradas;
-        this.B = B;
-        this.pesos = new ArrayList<Double>();
-        this.inputs = new ArrayList<Double>();
-        for (double d : pesos) {
-            this.pesos.add(d);
-        }
+    public void setB(double b) {
+        this.b = b;
+    }
+
+    public double getB() {
+        return b;
     }
 
     /**
-     * suma Ponderada "b + x1w1 + .. + xnwn"
-     * @return
-     */
-    private void sumaPondera() {
-        this.suma = this.B;
-        for (int i = 0; i < numEntradas; i++) {
-            this.suma += (this.inputs.get(i) * this.pesos.get(i));
+    public void addPesos(int key, double w) {
+        this.pesos.add(w);
+        this.relacion.put(key, this.pesos.size()-1);
+    }
+
+    public double getPesos(int key) {
+        return this.pesos.get(key);
+    }
+    */
+    public void setInputs(ArrayList<Double> inputs) {
+        if (this.numEntradas != inputs.size()) {
+            throw new IllegalArgumentException("La cantidad de inputs no coinciden con el numero de estradas.");
         }
+        this.inputs = inputs;
     }
 
-    /**
-     * Funcion de Activación 1 / (1 + e ^ sum)
-     * @return
-     */
-    private void funcionActivacion() {
-        this.output = 1 / (1 + Math.pow(Math.E, -this.suma));
-    }
-
-    /**
-     * Derivada de la Funcion de Coste
-     */
-    public double dxFCoste(double target) {
-        return this.output - target;
-    }
-
-    /**
-     * Derivada de la Funcion de Activación
-     */
-    public double dxFActivacion() {
-        return this.output * (1 - this.output);
-    }
-
-    public double errorImputado(double target) {
-        return this.dxFCoste(target) * this.derivadaFuncionActivacion();
-    }
-
-    public double errorBayas(double target) {
-        return this.errorImputado(target);
-    }
-
-    public double errorCosteW(int i, double target) {
-        return this.errorImputado(target) * this.inputs.get(i);
-    }
-
-    public void actualizaciónPesos() {
-        for (int i = 0; i < this.numEntradas; i++) {
-            this.pesos.set(i, this.pesos.get(i) - 0.6 * this.error(this.pesos.get(i), target));
-        }
-    }
-
-    public double calcularDerivadas() {
-        return this.errorImputado() * 
-    }
-
-    /**
-     * Evalua los datos de entrada
-     * @param X1
-     * @param X2
-     */
-    public void evaluar(double... input) {
-        if (this.numEntradas != input.length) {
-            throw new IllegalArgumentException("La cantidad de inputs no coinciden con el tamaño establecido.");
-        }
-        for (double d : input) {
-            this.inputs.add(d);
-        }
-        this.sumaPondera();
-        this.funcionActivacion();
-    }
-
-    public double getOutput() {
-        return output;
+    public void setTarget(double target) {
+        // pendiente
     }
 
     @Override
-    public String toString() {
-        String cad = "";
+    public double sumaPonderada() {
+        double suma = this.b;
         for (int i = 0; i < this.numEntradas; i++) {
-            cad += "\n  w"+i+": "+this.pesos.get(i)+",  x"+i+": "+this.inputs.get(i);
+            suma += (this.inputs.get(i) * this.pesos.get(i));
         }
-        cad += "\n  b: "+this.B+"\n  Output = " + this.output;
-        return cad;
+        return suma;
+    }
+
+    @Override
+    public double funcionActivacion() {
+        return 1 / (1 + Math.pow(Math.E, -this.sumaPonderada()));
+    }
+
+    @Override
+    public double derivadaFuncionActivacion() {
+        return this.funcionActivacion() * (1 - this.funcionActivacion());
+    }
+
+    @Override
+    public double errorImputado() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

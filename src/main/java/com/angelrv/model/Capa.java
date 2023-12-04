@@ -37,24 +37,52 @@ public class Capa {
     private void establecerPesos(double... pesos) {
         for (int i = 0; i < this.numNeuronas; i++) {
             int apuntador = i * (this.numEntradas+1);
-            this.neuronas.add(new Neurona(this.numEntradas, pesos[apuntador], Arrays.copyOfRange(pesos, apuntador+1, apuntador+1+this.numEntradas)));
+            this.neuronas.add(new NeuronaS(this.numEntradas, pesos[apuntador], Arrays.copyOfRange(pesos, apuntador+1, apuntador+1+this.numEntradas)));
         }
     }
 
-    public void setInput(int index, double... inputs) {
-        if (this.numEntradas != inputs.length) {
-            throw new IllegalArgumentException("La cantidad de Inputs no coinciden con el numero de entradas.");
+    //------------------------------------------------------------------------------
+    public void addInputs(ArrayList<Double> inputs) {
+        for (Neurona n : this.neuronas) {
+            n.setInputs(inputs);
         }
-        this.neuronas.get(index).evaluar(inputs);
     }
 
-    public double getOutput(int index) {
-        return this.neuronas.get(index).getOutput();
+    public void addTargets(ArrayList<Double> targets) {
+        for (int i = 0; i < this.numNeuronas; i++) {
+            this.neuronas.get(i).setTarget(targets.get(i));
+        }
+    }
+
+    public ArrayList<Double> getOutputs() {
+        ArrayList<Double> outputs = new ArrayList<Double>();
+        for (Neurona neurona : this.neuronas) {
+            outputs.add(neurona.funcionActivacion());
+        }
+        return outputs;
+    }
+
+    public ArrayList<ArrayList<Double>> getErrorInputado_x_Ws() {
+        ArrayList<ArrayList<Double>> datos = new ArrayList<>();
+        for (int i = 0; i < this.numEntradas; i++) {
+            datos.add(new ArrayList<Double>());
+        }
+        for (int i = 0; i < this.numNeuronas; i++) {
+            for (int j = 0; j < this.numEntradas; j++) {
+                datos.get(j).add(null);
+                this.neuronas.errorImputado() * this.neuronas.getPeso(i);
+            }
+        }
+        return new ArrayList<ArrayList<Double>>();
+    }
+
+    public ArrayList<ArrayList<Double>> updatePesos(ArrayList<ArrayList<Double>> errores) {
+        return new ArrayList<ArrayList<Double>>();
     }
 
     public void propagacionError(double target) {
         for (Neurona neurona : neuronas) {
-            neurona.errorTotal(target);
+            //neurona.errorTotal(target);
         }
     }
 
