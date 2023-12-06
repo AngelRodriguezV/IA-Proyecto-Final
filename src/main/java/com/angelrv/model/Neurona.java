@@ -1,41 +1,41 @@
 package com.angelrv.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public abstract class Neurona implements NeuronaFunciones {
+public class Neurona {
     
-    protected int numEntradas;
-    protected double b;
-    protected HashMap<Integer, Integer> relacion;
-    protected ArrayList<Double> pesos;
-    protected ArrayList<Double> inputs;
+    private int numEntradas;
+    private double b;
+    private ArrayList<Double> pesos;
+    private ArrayList<Double> inputs;
+    private NeuronaFunciones nF;
 
     public Neurona(int numEntradas) {
         this.numEntradas = numEntradas;
-        this.relacion = new HashMap<Integer, Integer>();
-        this.pesos = new ArrayList<Double>();
         this.inputs = new ArrayList<Double>();
+        this.pesos = new ArrayList<Double>();
+        this.b = Math.random();
+        for (int i = 0; i < this.numEntradas; i++) {
+            this.pesos.add(Math.random());
+        }
     }
 
-    public void setB(double b) {
-        this.b = b;
+    public void setnF(NeuronaFunciones nF) {
+        this.nF = nF;
+    }
+
+    public NeuronaFunciones getnF() {
+        return nF;
     }
 
     public double getB() {
         return b;
     }
 
-    /**
-    public void addPesos(int key, double w) {
-        this.pesos.add(w);
-        this.relacion.put(key, this.pesos.size()-1);
+    public double getPesos(int index) {
+        return this.pesos.get(index);
     }
 
-    public double getPesos(int key) {
-        return this.pesos.get(key);
-    }
-    */
     public void setInputs(ArrayList<Double> inputs) {
         if (this.numEntradas != inputs.size()) {
             throw new IllegalArgumentException("La cantidad de inputs no coinciden con el numero de estradas.");
@@ -43,11 +43,6 @@ public abstract class Neurona implements NeuronaFunciones {
         this.inputs = inputs;
     }
 
-    public void setTarget(double target) {
-        // pendiente
-    }
-
-    @Override
     public double sumaPonderada() {
         double suma = this.b;
         for (int i = 0; i < this.numEntradas; i++) {
@@ -56,19 +51,33 @@ public abstract class Neurona implements NeuronaFunciones {
         return suma;
     }
 
-    @Override
     public double funcionActivacion() {
         return 1 / (1 + Math.pow(Math.E, -this.sumaPonderada()));
     }
 
-    @Override
     public double derivadaFuncionActivacion() {
         return this.funcionActivacion() * (1 - this.funcionActivacion());
     }
 
-    @Override
     public double errorImputado() {
-        // TODO Auto-generated method stub
-        return 0;
+        return nF.errorImputado(this);
+    }
+
+    public ArrayList<Double> getErrIxW() {
+        ArrayList<Double> errIxW = new ArrayList<>();
+        for (Double peso : this.pesos) {
+            errIxW.add(this.errorImputado() * peso);
+        }
+        return errIxW;
+    }
+
+    public void actualizarPesos() {
+        for (int i = 0; i < this.numEntradas; i++) {
+            this.pesos.set(i,this.pesos.get(i) - (0.6 * this.errorImputado() * this.inputs.get(i)));
+        }
+    }
+
+    public void actualizarBayas() {
+        this.b = this.b - (0.6 * this.errorImputado());
     }
 }

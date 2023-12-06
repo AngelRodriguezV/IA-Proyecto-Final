@@ -18,39 +18,10 @@ public class Capa {
         }
     }
 
-    /**
-     * 
-     * @param numNeuronas
-     * @param numEntradas
-     * @param pesos los pesos se agregan de la siguiente manera b1, w1, w2, b2, w3, w4, ..., bn, wn-1, wn
-     */
-    public Capa(int numNeuronas, int numEntradas, double... pesos) {
-        if ((numNeuronas*(numEntradas+1)) != pesos.length) {
-            throw new IllegalArgumentException("La cantidad de Pesos no coinciden con el numero de pesos + 1 para cada neurona");
-        }
-        this.numNeuronas = numNeuronas;
-        this.numEntradas = numEntradas;
-        this.neuronas = new ArrayList<Neurona>();
-        this.establecerPesos(pesos);
-    }
-
-    private void establecerPesos(double... pesos) {
-        for (int i = 0; i < this.numNeuronas; i++) {
-            int apuntador = i * (this.numEntradas+1);
-            this.neuronas.add(new NeuronaS(this.numEntradas, pesos[apuntador], Arrays.copyOfRange(pesos, apuntador+1, apuntador+1+this.numEntradas)));
-        }
-    }
-
     //------------------------------------------------------------------------------
     public void addInputs(ArrayList<Double> inputs) {
-        for (Neurona n : this.neuronas) {
-            n.setInputs(inputs);
-        }
-    }
-
-    public void addTargets(ArrayList<Double> targets) {
         for (int i = 0; i < this.numNeuronas; i++) {
-            this.neuronas.get(i).setTarget(targets.get(i));
+            this.neuronas.get(i).setInputs(inputs);
         }
     }
 
@@ -63,35 +34,31 @@ public class Capa {
     }
 
     public ArrayList<ArrayList<Double>> getErrorInputado_x_Ws() {
-        ArrayList<ArrayList<Double>> datos = new ArrayList<>();
+        ArrayList<ArrayList<Double>> errIxWs = new ArrayList<>();
         for (int i = 0; i < this.numEntradas; i++) {
-            datos.add(new ArrayList<Double>());
+            errIxWs.add(new ArrayList<Double>());
         }
         for (int i = 0; i < this.numNeuronas; i++) {
             for (int j = 0; j < this.numEntradas; j++) {
-                datos.get(j).add(null);
-                this.neuronas.errorImputado() * this.neuronas.getPeso(i);
+                errIxWs.get(j).add(this.neuronas.get(i).errorImputado() * this.neuronas.get(i).getPesos(j));
             }
         }
-        return new ArrayList<ArrayList<Double>>();
+        return errIxWs;
     }
 
-    public ArrayList<ArrayList<Double>> updatePesos(ArrayList<ArrayList<Double>> errores) {
-        return new ArrayList<ArrayList<Double>>();
-    }
-
-    public void propagacionError(double target) {
-        for (Neurona neurona : neuronas) {
-            //neurona.errorTotal(target);
+    public void actualizarPesosBayas() {
+        for (Neurona neurona : this.neuronas) {
+            neurona.actualizarPesos();
+            neurona.actualizarBayas();
         }
     }
 
     public int getNumNeuronas() {
-        return numNeuronas;
+        return this.numNeuronas;
     }
 
     public int getNumEntradas() {
-        return numEntradas;
+        return this.numEntradas;
     }
 
     @Override
