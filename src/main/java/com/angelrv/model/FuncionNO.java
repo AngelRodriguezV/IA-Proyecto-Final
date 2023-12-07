@@ -5,6 +5,9 @@ import java.util.ArrayList;
 public class FuncionNO implements NeuronaFunciones{
     
     private ArrayList<Double> ErrIxWs;
+    public FuncionNO(ArrayList<Double> errIxWs) {
+        this.ErrIxWs = errIxWs;
+    }
 
     @Override
     public double errorImputado(Neurona n) {

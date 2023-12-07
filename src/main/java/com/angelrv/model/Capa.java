@@ -1,17 +1,21 @@
 package com.angelrv.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Capa {
+
+    public static final int NEURONA_OCULTA = 1;
+    public static final int NEURONA_SALIDA = 2;
     
     private int numNeuronas;
     private int numEntradas;
     private ArrayList<Neurona> neuronas;
+    private int tipoNeurona;
 
-    public Capa(int numNeuronas, int numEntradas) {
+    public Capa(int numNeuronas, int numEntradas, int tipoNeurona) {
         this.numNeuronas = numNeuronas;
         this.numEntradas = numEntradas;
+        this.tipoNeurona = tipoNeurona;
         this.neuronas = new ArrayList<Neurona>();
         for (int i = 0; i < this.numNeuronas; i++) {
             this.neuronas.add(new Neurona(this.numEntradas));
@@ -33,7 +37,13 @@ public class Capa {
         return outputs;
     }
 
-    public ArrayList<ArrayList<Double>> getErrorInputado_x_Ws() {
+    public void setTarget(ArrayList<Double> targets) {
+        for (int i = 0; i < this.numNeuronas; i++) {
+            this.neuronas.get(i).setnF(new FuncionNS(targets.get(i)));
+        }
+    }
+
+    public ArrayList<ArrayList<Double>> getErrIxWs() {
         ArrayList<ArrayList<Double>> errIxWs = new ArrayList<>();
         for (int i = 0; i < this.numEntradas; i++) {
             errIxWs.add(new ArrayList<Double>());
@@ -44,6 +54,16 @@ public class Capa {
             }
         }
         return errIxWs;
+    }
+
+    public void setErrIxWs(ArrayList<ArrayList<Double>> errIxWs) {
+        for (int i = 0; i < this.numNeuronas; i++) {
+            if (this.tipoNeurona == NEURONA_SALIDA) {
+                this.neuronas.get(i).setnF(new FuncionNO(errIxWs.get(i)));
+            } else {
+                this.neuronas.get(i).setnF(new FuncionNO(errIxWs.get(i)));
+            }
+        }
     }
 
     public void actualizarPesosBayas() {
