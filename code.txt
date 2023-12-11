@@ -1,0 +1,40 @@
+public class Neurona {
+    private double[] pesos;
+    private double umbral;
+
+    public Neurona(int numEntradas) {
+        pesos = new double[numEntradas];
+        // Inicialización de pesos y umbral (podría ser aleatoria)
+        for (int i = 0; i < numEntradas; i++) {
+            pesos[i] = Math.random(); // Puedes modificar la inicialización según tu modelo
+        }
+        umbral = Math.random(); // Puedes modificar la inicialización del umbral
+    }
+
+    public int predecir(int[] entradas) {
+        if (entradas.length != pesos.length) {
+            throw new IllegalArgumentException("La cantidad de entradas no coincide con la cantidad de pesos");
+        }
+
+        double sumaPonderada = 0;
+        for (int i = 0; i < entradas.length; i++) {
+            sumaPonderada += pesos[i] * entradas[i];
+        }
+
+        if (sumaPonderada >= umbral) {
+            return 1; // Neurona activada
+        } else {
+            return 0; // Neurona inactivada
+        }
+    }
+
+    public static void main(String[] args) {
+        int numEntradas = 3; // Número de entradas para la neurona
+        Neurona neurona = new Neurona(numEntradas);
+
+        int[] entradas = {1, 0, 1}; // Ejemplo de entradas
+        int prediccion = neurona.predecir(entradas);
+
+        System.out.println("Predicción: " + prediccion);
+    }
+}

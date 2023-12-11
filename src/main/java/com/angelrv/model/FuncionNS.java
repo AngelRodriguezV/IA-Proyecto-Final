@@ -2,23 +2,23 @@ package com.angelrv.model;
 
 public class FuncionNS implements NeuronaFunciones{
     
-    private double target;
+    private Double target;
 
-    public FuncionNS(double target) {
+    public FuncionNS(Double target) {
         this.target = target;
     }
 
     @Override
-    public double errorImputado(Neurona neurona) {
+    public Double errorImputado(Neurona neurona) {
         return (neurona.funcionActivacion() - this.target) * neurona.derivadaFuncionActivacion();
     }
 
 
-    public double getTarget() {
+    public Double getTarget() {
         return target;
     }
 
-    public void setTarget(double target) {
+    public void setTarget(Double target) {
         this.target = target;
     }
 }

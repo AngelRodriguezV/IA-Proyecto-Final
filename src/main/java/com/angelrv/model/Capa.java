@@ -12,6 +12,8 @@ public class Capa {
     private ArrayList<Neurona> neuronas;
     private int tipoNeurona;
 
+    private ArrayList<Double> targets;
+
     public Capa(int numNeuronas, int numEntradas, int tipoNeurona) {
         this.numNeuronas = numNeuronas;
         this.numEntradas = numEntradas;
@@ -43,6 +45,14 @@ public class Capa {
         }
     }
 
+    public Double getErrorTotal(ArrayList<Double> target) {
+        Double errTotal = 0.0;
+        for (int i = 0; i < this.numNeuronas; i++) {
+            errTotal += 0.5 * Math.pow(target.get(i) - this.neuronas.get(i).funcionActivacion(), 2);
+        }
+        return errTotal;
+    } 
+
     public ArrayList<ArrayList<Double>> getErrIxWs() {
         ArrayList<ArrayList<Double>> errIxWs = new ArrayList<>();
         for (int i = 0; i < this.numEntradas; i++) {
@@ -59,7 +69,7 @@ public class Capa {
     public void setErrIxWs(ArrayList<ArrayList<Double>> errIxWs) {
         for (int i = 0; i < this.numNeuronas; i++) {
             if (this.tipoNeurona == NEURONA_SALIDA) {
-                this.neuronas.get(i).setnF(new FuncionNO(errIxWs.get(i)));
+                continue;
             } else {
                 this.neuronas.get(i).setnF(new FuncionNO(errIxWs.get(i)));
             }

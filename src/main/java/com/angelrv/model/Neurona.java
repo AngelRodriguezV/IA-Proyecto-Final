@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Neurona {
     
     private int numEntradas;
-    private double b;
+    private Double b;
     private ArrayList<Double> pesos;
     private ArrayList<Double> inputs;
     private NeuronaFunciones nF;
@@ -28,11 +28,11 @@ public class Neurona {
         return nF;
     }
 
-    public double getB() {
+    public Double getB() {
         return b;
     }
 
-    public double getPesos(int index) {
+    public Double getPesos(int index) {
         return this.pesos.get(index);
     }
 
@@ -43,23 +43,23 @@ public class Neurona {
         this.inputs = inputs;
     }
 
-    public double sumaPonderada() {
-        double suma = this.b;
+    public Double sumaPonderada() {
+        Double suma = this.b;
         for (int i = 0; i < this.numEntradas; i++) {
             suma += (this.inputs.get(i) * this.pesos.get(i));
         }
         return suma;
     }
 
-    public double funcionActivacion() {
+    public Double funcionActivacion() {
         return 1 / (1 + Math.pow(Math.E, -this.sumaPonderada()));
     }
 
-    public double derivadaFuncionActivacion() {
+    public Double derivadaFuncionActivacion() {
         return this.funcionActivacion() * (1 - this.funcionActivacion());
     }
 
-    public double errorImputado() {
+    public Double errorImputado() {
         return nF.errorImputado(this);
     }
 

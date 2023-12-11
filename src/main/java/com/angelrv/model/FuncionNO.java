@@ -10,8 +10,8 @@ public class FuncionNO implements NeuronaFunciones{
     }
 
     @Override
-    public double errorImputado(Neurona n) {
-        double errI = 0;
+    public Double errorImputado(Neurona n) {
+        Double errI = 0.0;
         for (Double errIxW : ErrIxWs) {
             errI += (errIxW * n.derivadaFuncionActivacion());
         }
